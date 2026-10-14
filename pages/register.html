@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta name="theme-color" content="#042e6f">
+  <title>تسجيل جديد - منصة الجند التعليمية</title>
+
+  <!-- الخطوط العربية -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- الأنماط المشتركة (من jsDelivr) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bifa90/aljanad-platform@main/assets/css/main.css">
+
+  <!-- أيقونة التبويبة -->
+  <link rel="icon" href="https://lh3.googleusercontent.com/d/AKGpihY38ipgfaONg2BBXUWc61reV-oLJKvj79jfwfBGePPBXP5irAzy1mlu3mwhbK1KO47Pt_0Z5PLc6hn4Q1jSyDkD3eeo9Ziu0iA" type="image/png">
+</head>
+<body>
+
+  <!-- ===== الترويسة ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="https://just-taiz.blogspot.com/">
+        <img class="brand-logo"
+             src="https://lh3.googleusercontent.com/d/AKGpihY38ipgfaONg2BBXUWc61reV-oLJKvj79jfwfBGePPBXP5irAzy1mlu3mwhbK1KO47Pt_0Z5PLc6hn4Q1jSyDkD3eeo9Ziu0iA"
+             alt="منصة الجند التعليمية">
+        <div class="brand-text">
+          <span class="brand-title">منصة الجند التعليمية</span>
+          <span class="brand-sub">جامعة الجند - تعز</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <a href="https://just-taiz.blogspot.com/">الرئيسية</a>
+        <a href="login.html">تسجيل الدخول</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== المحتوى ===== -->
+  <main class="page-content">
+
+    <div class="card-container">
+
+      <div class="page-header">
+        <div class="page-icon">📝</div>
+        <h1>تسجيل طالب جديد</h1>
+        <p class="subtitle">أدخل بياناتك، وسيتم إرسالها للمشرف لتوليد كود الدخول</p>
+      </div>
+
+      <form id="registerForm" class="register-form" novalidate>
+
+        <div class="form-group">
+          <label for="studentName">الاسم الكامل <span class="required">*</span></label>
+          <input id="studentName" name="studentName" type="text" placeholder="مثال: أحمد محمد علي" required>
+          <span class="error-msg" id="nameError"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="studentId">الرقم الجامعي <span class="optional">(اختياري)</span></label>
+          <input id="studentId" name="studentId" type="text" placeholder="مثال: 2024001">
+          <span class="error-msg" id="idError"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="studentPhone">رقم الهاتف (واتساب) <span class="required">*</span></label>
+          <input id="studentPhone" name="studentPhone" type="tel" placeholder="مثال: 777410332" required>
+          <span class="error-msg" id="phoneError"></span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="college">الكلية <span class="required">*</span></label>
+            <select id="college" name="college" required>
+              <option value="">اختر الكلية</option>
+              <option value="ENG">كلية الهندسة وتقنية المعلومات</option>
+            </select>
+            <span class="error-msg" id="collegeError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="department">القسم <span class="required">*</span></label>
+            <select id="department" name="department" required>
+              <option value="">اختر القسم</option>
+              <option value="ARCH">قسم الهندسة المعمارية</option>
+              <option value="CIVIL">قسم التصميم الداخلي</option>
+            </select>
+            <span class="error-msg" id="deptError"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="level">المستوى الدراسي <span class="required">*</span></label>
+          <select id="level" name="level" required>
+            <option value="">اختر المستوى</option>
+            <option value="1">المستوى الأول</option>
+            <option value="2">المستوى الثاني</option>
+            <option value="3">المستوى الثالث</option>
+            <option value="4">المستوى الرابع</option>
+          </select>
+          <span class="error-msg" id="levelError"></span>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span id="btnText">📤 إرسال الطلب عبر واتساب</span>
+          <span id="btnLoader" class="loader" style="display:none;"></span>
+        </button>
+
+      </form>
+
+      <div id="successBox" class="success-box" style="display:none;">
+        <div class="success-icon">✅</div>
+        <h3>تم فتح واتساب!</h3>
+        <p>اضغط على زر <strong>"إرسال"</strong> في واتساب لإكمال طلبك.</p>
+        <p class="note">سيصلك كود الدخول على نفس الرقم بعد مراجعة طلبك.</p>
+        <a class="btn-login" href="login.html">🔑 الانتقال لتسجيل الدخول</a>
+      </div>
+
+      <div class="card-footer">
+        <p>لديك كود دخول؟ <a href="login.html">سجّل الدخول</a></p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ===== الفوتر ===== -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-bottom">© 2026 <a href="https://just-taiz.blogspot.com/">منصة الجند التعليمية</a> — المنصة تجريبية قيد التطوير</p>
+    </div>
+  </footer>
+
+  <!-- سكربت API (من jsDelivr) -->
+  <script src="https://cdn.jsdelivr.net/gh/bifa90/aljanad-platform@main/assets/js/api.js"></script>
+
+  <!-- ربط النموذج بالسكربت -->
+  <script>
+    (function () {
+      'use strict';
+      var form = document.getElementById('registerForm');
+      if (!form) return;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        var data = {
+          name:         document.getElementById('studentName').value.trim(),
+          studentId:    document.getElementById('studentId').value.trim(),
+          phone:        document.getElementById('studentPhone').value.trim(),
+          college:      document.getElementById('college').value,
+          department:   document.getElementById('department').value,
+          level:        document.getElementById('level').value
+        };
+
+        var result = AlJanadAPI.validateRegistration(data);
+        AlJanadAPI.showErrors(result.errors);
+
+        if (!result.valid) return;
+
+        AlJanadAPI.setLoading(true);
+        AlJanadAPI.submitRegistration(data)
+          .then(function () {
+            form.style.display = 'none';
+            document.getElementById('successBox').style.display = 'block';
+          })
+          .catch(function (err) {
+            alert(err.message || 'حدث خطأ، حاول مرة أخرى');
+          })
+          .finally(function () {
+            AlJanadAPI.setLoading(false);
+          });
+      });
+    })();
+  </script>
+
+</body>
+</html>
