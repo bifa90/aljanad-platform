@@ -1,0 +1,226 @@
+<!-- ============================================================
+     بوابة الطالب - منصة الجند التعليمية
+     Student Portal - Al-Janad Educational Platform
+     ============================================================ -->
+
+<div class="portal-wrapper">
+
+  <!-- ═══════════════════════════════════════════════════════
+       شريط التقدم العام (يظهر أعلى الصفحة)
+       ═══════════════════════════════════════════════════════ -->
+  <div class="global-progress-bar" id="globalProgressBar">
+    <div class="global-progress-fill" id="globalProgressFill" style="width: 0%"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       قسم الترحيب (Welcome Section)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="welcome-section">
+    <div class="welcome-content">
+      <div class="welcome-text">
+        <h1 id="greeting">مرحبًا 👋</h1>
+        <p class="welcome-sub" id="welcomeSub">جاري تحميل بياناتك...</p>
+      </div>
+      <div class="welcome-actions">
+        <div class="streak-badge" id="streakBadge" title="أيام الحضور المتواصلة">
+          <span class="streak-icon">🔥</span>
+          <span class="streak-count" id="streakCount">0</span>
+          <span class="streak-label">يوم</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       بطاقة الطالب (Profile Card)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="profile-card-wrapper">
+    <div class="profile-card">
+      <div class="profile-avatar" id="profileAvatar">أ</div>
+      <div class="profile-info">
+        <h2 class="profile-name" id="profileName">—</h2>
+        <div class="profile-meta">
+          <span class="meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"/>
+              <path d="M7 9h10M7 13h6"/>
+            </svg>
+            <span id="profileStudentId">—</span>
+          </span>
+          <span class="meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/>
+            </svg>
+            <span id="profileDepartment">—</span>
+          </span>
+          <span class="meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+            <span id="profileLevel">—</span>
+          </span>
+        </div>
+        <div class="profile-code">
+          <span class="code-label">كود الدخول:</span>
+          <code class="code-value" id="profileCode">••••••••</code>
+          <button class="code-toggle" id="codeToggle" title="إظهار/إخفاء">👁️</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       الإحصائيات (Stats Dashboard)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="stats-grid">
+    <div class="stat-card stat-courses">
+      <div class="stat-icon">📚</div>
+      <div class="stat-content">
+        <span class="stat-value" id="statCourses">0</span>
+        <span class="stat-label">مقرر نشط</span>
+      </div>
+    </div>
+    <div class="stat-card stat-lessons">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <span class="stat-value" id="statLessons">0</span>
+        <span class="stat-label">درس مكتمل</span>
+      </div>
+    </div>
+    <div class="stat-card stat-score">
+      <div class="stat-icon">📈</div>
+      <div class="stat-content">
+        <span class="stat-value" id="statScore">—</span>
+        <span class="stat-label">متوسط الدرجات</span>
+      </div>
+    </div>
+    <div class="stat-card stat-quizzes">
+      <div class="stat-icon">📝</div>
+      <div class="stat-content">
+        <span class="stat-value" id="statQuizzes">0</span>
+        <span class="stat-label">اختبار مُسلَّم</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       الإجراء التالي (Next Action)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="next-action-wrapper" id="nextActionWrapper" style="display:none;">
+    <div class="next-action-card">
+      <div class="next-action-badge">🎯 تابع من هنا</div>
+      <div class="next-action-content">
+        <div class="next-action-info">
+          <h3 id="nextActionCourse">—</h3>
+          <p id="nextActionLesson">—</p>
+        </div>
+        <a class="next-action-btn" id="nextActionBtn" href="#">
+          <span>ابدأ الآن</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       المقررات (Courses Grid)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="courses-wrapper">
+    <div class="section-header">
+      <h2>📚 مقرراتي</h2>
+      <p class="section-subtitle">المقررات المتاحة لمستواك الدراسي</p>
+    </div>
+
+    <div class="courses-grid" id="coursesGrid">
+      <!-- سيتم تحميل المقررات هنا عبر JavaScript -->
+      <div class="loading-skeleton">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       آخر النتائج (Recent Results)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="results-wrapper" id="resultsWrapper">
+    <div class="section-header">
+      <h2>📊 آخر النتائج</h2>
+      <p class="section-subtitle">أحدث 5 اختبارات قمت بها</p>
+    </div>
+
+    <div class="results-list" id="resultsList">
+      <!-- يتم التحميل عبر JavaScript -->
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+       الروابط السريعة (Quick Links)
+       ═══════════════════════════════════════════════════════ -->
+  <section class="quick-links-wrapper">
+    <div class="section-header">
+      <h2>⚡ روابط سريعة</h2>
+    </div>
+    <div class="quick-links-grid">
+      <a class="quick-link" href="/p/results.html">
+        <div class="quick-link-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <div class="quick-link-text">
+          <h4>نتائجي</h4>
+          <p>عرض كل الدرجات</p>
+        </div>
+      </a>
+
+      <a class="quick-link" href="https://wa.me/967777410332" target="_blank" rel="noopener">
+        <div class="quick-link-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+        </div>
+        <div class="quick-link-text">
+          <h4>تواصل مع المشرف</h4>
+          <p>واتساب مباشر</p>
+        </div>
+      </a>
+
+      <a class="quick-link" href="/p/about.html">
+        <div class="quick-link-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div class="quick-link-text">
+          <h4>دليل الاستخدام</h4>
+          <p>كيفية استخدام المنصة</p>
+        </div>
+      </a>
+
+      <button class="quick-link" id="logoutBtn">
+        <div class="quick-link-icon logout-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </div>
+        <div class="quick-link-text">
+          <h4>تسجيل الخروج</h4>
+          <p>إنهاء الجلسة</p>
+        </div>
+      </button>
+    </div>
+  </section>
+
+</div>
+
+<!-- ربط سكربت البوابة -->
+<script src="https://cdn.jsdelivr.net/gh/bifa90/aljanad-platform@main/assets/js/portal.js"></script>
