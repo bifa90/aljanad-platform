@@ -13,11 +13,34 @@
         </svg>
       </div>
       <h1>تسجيل الدخول</h1>
-      <p class="subtitle">أدخل كود الدخول الخاص بك للوصول إلى مقرراتك</p>
+      <p class="subtitle">أدخل رقم هاتفك وكود الدخول للوصول إلى مقرراتك</p>
     </div>
 
     <form id="loginForm" novalidate>
 
+      <!-- رقم الهاتف -->
+      <div class="form-group">
+        <label for="studentPhone">
+          <span class="label-text">رقم الهاتف (واتساب)</span>
+          <span class="required-badge">مطلوب</span>
+        </label>
+        <div class="input-wrapper">
+          <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          <input 
+            id="studentPhone" 
+            name="studentPhone" 
+            type="tel" 
+            placeholder="مثال: 777000000" 
+            required
+            autocomplete="tel"
+            inputmode="numeric">
+        </div>
+        <span class="error-msg" id="studentPhoneError"></span>
+      </div>
+
+      <!-- كود الدخول -->
       <div class="form-group">
         <label for="accessCode">
           <span class="label-text">كود الدخول</span>
@@ -79,67 +102,88 @@
   var form = document.getElementById('loginForm');
   if (!form) return;
 
-  // تنسيق تلقائي للكود أثناء الكتابة
-  var codeInput = document.getElementById('accessCode');
-  codeInput.addEventListener('input', function(e) {
-    var v = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
-    // إضافة HA1- تلقائيًا إن لم تكن موجودة
-    if (v && !v.startsWith('HA1-') && !v.startsWith('HA')) {
-      // لا نفعل شيئًا، نترك الطالب يكتب
-    }
-    e.target.value = v;
-    document.getElementById('accessCodeError').textContent = '';
-    var wrapper = codeInput.closest('.input-wrapper');
-    if (wrapper) wrapper.classList.remove('error');
+  var phoneInput = document.getElementById('studentPhone');
+  var codeInput  = document.getElementById('accessCode');
+
+  // تنظيف تلقائي لرقم الهاتف (أرقام فقط)
+  phoneInput.addEventListener('input', function(e) {
+    e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 12);
+    clearError('studentPhone');
   });
 
-  // إرسال النموذج
+  // تحويل تلقائي للكود إلى أحرف كبيرة
+  codeInput.addEventListener('input', function(e) {
+    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
+    clearError('accessCode');
+  });
+
+  function clearError(fieldId) {
+    document.getElementById(fieldId + 'Error').textContent = '';
+    var el = document.getElementById(fieldId);
+    var wrapper = el.closest('.input-wrapper');
+    if (wrapper) wrapper.classList.remove('error');
+  }
+
+  function setError(fieldId, message) {
+    document.getElementById(fieldId + 'Error').textContent = message;
+    var el = document.getElementById(fieldId);
+    var wrapper = el.closest('.input-wrapper');
+    if (wrapper) wrapper.classList.add('error');
+  }
+
   form.addEventListener('submit', function(e) {
     e.preventDefault();
 
-    var code = codeInput.value.trim().toUpperCase();
-    var errorEl = document.getElementById('accessCodeError');
-    var wrapper = codeInput.closest('.input-wrapper');
+    var phone = phoneInput.value.trim();
+    var code  = codeInput.value.trim().toUpperCase();
 
-    // التحقق من الصيغة
+    // تحقق من الرقم
+    var cleanPhone = phone.replace(/^0/, '').replace(/\s+/g, '');
+    if (!cleanPhone || !/^[0-9]{9,12}$/.test(cleanPhone)) {
+      setError('studentPhone', 'رقم الهاتف غير صحيح (9 إلى 12 رقمًا)');
+      return;
+    }
+
+    // تحقق من الكود
     if (!code) {
-      errorEl.textContent = 'أدخل كود الدخول';
-      if (wrapper) wrapper.classList.add('error');
+      setError('accessCode', 'أدخل كود الدخول');
       return;
     }
 
     if (!AlJanadAPI.validateAccessCode(code)) {
-      errorEl.textContent = 'صيغة الكود غير صحيحة (مثال: HA1-A2B3C4D5)';
-      if (wrapper) wrapper.classList.add('error');
+      setError('accessCode', 'صيغة الكود غير صحيحة (مثال: HA1-A2B3C4D5)');
       return;
     }
 
     // بدء الاتصال
     AlJanadAPI.setLoading(true, 'submitBtn', 'btnText', 'btnLoader');
 
-    AlJanadAPI.verifyAccessCode(code)
+    AlJanadAPI.verifyAccessCode(code, cleanPhone)
       .then(function(result) {
         if (!result.success) {
-          throw new Error(result.message || 'كود غير صحيح');
+          throw new Error(result.message || 'بيانات الدخول غير صحيحة');
         }
 
-        // حفظ الجلسة
         AlJanadAPI.saveSession(result.student);
 
-        // عرض رسالة النجاح
         form.style.display = 'none';
         document.getElementById('successBox').style.display = 'block';
         document.getElementById('welcomeName').textContent = result.student.name;
 
-        // التحويل إلى البوابة بعد ثانيتين
         setTimeout(function() {
           window.location.href = '/p/portal.html';
-        }, 2000);
+        }, 1800);
       })
       .catch(function(err) {
-        var msg = err.message || 'تعذر التحقق من الكود';
-        errorEl.textContent = msg;
-        if (wrapper) wrapper.classList.add('error');
+        var msg = err.message || 'تعذر التحقق من بياناتك';
+
+        // توجيه الخطأ للحقل المناسب
+        if (msg.indexOf('هاتف') !== -1 || msg.indexOf('رقم') !== -1) {
+          setError('studentPhone', msg);
+        } else {
+          setError('accessCode', msg);
+        }
+
         AlJanadAPI.showToast(msg, 'error', 4000);
       })
       .finally(function() {
