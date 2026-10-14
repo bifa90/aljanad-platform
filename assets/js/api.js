@@ -11,7 +11,7 @@
      ========================================================== */
   var CONFIG = {
     // ⚠️ استبدل هذا برابط Web App بعد نشره
-    APPS_SCRIPT_URL: 'YOUR_APPS_SCRIPT_WEB_APP_URL',
+    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbymeaVNqqSKfssuY89x3KeFqv96W8zaRe2PH6KoUpL6q2PQaQEo0bx-Q1eyNUYfUERToQ/exec',
 
     // رقم واتساب المشرف
     ADMIN_WHATSAPP: '967777410332',
