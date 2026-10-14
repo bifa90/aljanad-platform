@@ -1,0 +1,151 @@
+<!-- ============================================================
+     صفحة تسجيل الدخول - منصة الجند التعليمية
+     ============================================================ -->
+
+<section class="page-section">
+  <div class="register-card login-card">
+
+    <div class="card-header">
+      <div class="header-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <h1>تسجيل الدخول</h1>
+      <p class="subtitle">أدخل كود الدخول الخاص بك للوصول إلى مقرراتك</p>
+    </div>
+
+    <form id="loginForm" novalidate>
+
+      <div class="form-group">
+        <label for="accessCode">
+          <span class="label-text">كود الدخول</span>
+          <span class="required-badge">مطلوب</span>
+        </label>
+        <div class="input-wrapper">
+          <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+          </svg>
+          <input 
+            id="accessCode" 
+            name="accessCode" 
+            type="text" 
+            placeholder="HA1-XXXXXXXX" 
+            required
+            autocomplete="off"
+            spellcheck="false"
+            style="text-align:center; font-family:monospace; letter-spacing:3px; font-size:1.05rem; font-weight:700;">
+        </div>
+        <span class="error-msg" id="accessCodeError"></span>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span id="btnText" style="display:inline-flex;align-items:center;gap:10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <path d="M10 17l5-5-5-5M15 12H3"/>
+          </svg>
+          دخول
+        </span>
+        <span id="btnLoader" class="loader" style="display:none;"></span>
+      </button>
+
+    </form>
+
+    <div id="successBox" class="success-box" style="display:none;">
+      <div class="success-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <path d="M22 4L12 14.01l-3-3"/>
+        </svg>
+      </div>
+      <h3>تم تسجيل دخولك!</h3>
+      <p>مرحبًا <strong id="welcomeName"></strong></p>
+      <p class="note">جاري تحويلك إلى بوابة الطالب...</p>
+    </div>
+
+    <div class="card-footer">
+      <p>ليس لديك كود دخول؟ <a href="/p/register.html">سجّل الآن</a></p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function() {
+  'use strict';
+
+  var form = document.getElementById('loginForm');
+  if (!form) return;
+
+  // تنسيق تلقائي للكود أثناء الكتابة
+  var codeInput = document.getElementById('accessCode');
+  codeInput.addEventListener('input', function(e) {
+    var v = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
+    // إضافة HA1- تلقائيًا إن لم تكن موجودة
+    if (v && !v.startsWith('HA1-') && !v.startsWith('HA')) {
+      // لا نفعل شيئًا، نترك الطالب يكتب
+    }
+    e.target.value = v;
+    document.getElementById('accessCodeError').textContent = '';
+    var wrapper = codeInput.closest('.input-wrapper');
+    if (wrapper) wrapper.classList.remove('error');
+  });
+
+  // إرسال النموذج
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var code = codeInput.value.trim().toUpperCase();
+    var errorEl = document.getElementById('accessCodeError');
+    var wrapper = codeInput.closest('.input-wrapper');
+
+    // التحقق من الصيغة
+    if (!code) {
+      errorEl.textContent = 'أدخل كود الدخول';
+      if (wrapper) wrapper.classList.add('error');
+      return;
+    }
+
+    if (!AlJanadAPI.validateAccessCode(code)) {
+      errorEl.textContent = 'صيغة الكود غير صحيحة (مثال: HA1-A2B3C4D5)';
+      if (wrapper) wrapper.classList.add('error');
+      return;
+    }
+
+    // بدء الاتصال
+    AlJanadAPI.setLoading(true, 'submitBtn', 'btnText', 'btnLoader');
+
+    AlJanadAPI.verifyAccessCode(code)
+      .then(function(result) {
+        if (!result.success) {
+          throw new Error(result.message || 'كود غير صحيح');
+        }
+
+        // حفظ الجلسة
+        AlJanadAPI.saveSession(result.student);
+
+        // عرض رسالة النجاح
+        form.style.display = 'none';
+        document.getElementById('successBox').style.display = 'block';
+        document.getElementById('welcomeName').textContent = result.student.name;
+
+        // التحويل إلى البوابة بعد ثانيتين
+        setTimeout(function() {
+          window.location.href = '/p/portal.html';
+        }, 2000);
+      })
+      .catch(function(err) {
+        var msg = err.message || 'تعذر التحقق من الكود';
+        errorEl.textContent = msg;
+        if (wrapper) wrapper.classList.add('error');
+        AlJanadAPI.showToast(msg, 'error', 4000);
+      })
+      .finally(function() {
+        AlJanadAPI.setLoading(false, 'submitBtn', 'btnText', 'btnLoader');
+      });
+  });
+
+})();
+</script>
