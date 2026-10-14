@@ -11,7 +11,7 @@
      ========================================================== */
   var CONFIG = {
     // ⚠️ استبدل هذا برابط Web App بعد نشره
-    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbymeaVNqqSKfssuY89x3KeFqv96W8zaRe2PH6KoUpL6q2PQaQEo0bx-Q1eyNUYfUERToQ/exec',
+    APPS_SCRIPT_URL: 'YOUR_APPS_SCRIPT_WEB_APP_URL',
 
     // رقم واتساب المشرف
     ADMIN_WHATSAPP: '967777410332',
@@ -108,6 +108,12 @@
     return /^[0-9]{9,12}$/.test(cleaned);
   }
 
+  function validateAccessCode(code) {
+    if (!code) return false;
+    var cleaned = String(code).trim().toUpperCase();
+    return /^HA1-[A-Z0-9]{8}$/.test(cleaned);
+  }
+
   function validateRegistration(data) {
     var errors = {};
     var valid = true;
@@ -127,12 +133,6 @@
     if (!data.level)      { errors.level   = 'اختر المستوى';  valid = false; }
 
     return { valid: valid, errors: errors };
-  }
-
-  function validateAccessCode(code) {
-    if (!code) return false;
-    var cleaned = String(code).trim().toUpperCase();
-    return /^HA1-[A-Z0-9]{8}$/.test(cleaned);
   }
 
   /* ==========================================================
@@ -252,7 +252,7 @@
      عمليات الطالب
      ========================================================== */
 
-  function verifyAccessCode(code) {
+  function verifyAccessCode(code, phone) {
     if (!validateAccessCode(code)) {
       return Promise.resolve({
         success: false,
@@ -260,13 +260,26 @@
       });
     }
 
+    if (!phone || !validatePhone(phone)) {
+      return Promise.resolve({
+        success: false,
+        message: 'رقم الهاتف غير صحيح'
+      });
+    }
+
+    var cleanPhone = String(phone).replace(/^0/, '').replace(/\s+/g, '');
+
     return callBackend('verifyAccessCode', {
-      code: code.trim().toUpperCase()
+      code: code.trim().toUpperCase(),
+      phone: cleanPhone
     });
   }
 
-  function getStudentData(code) {
-    return callBackend('getStudentData', { code: code });
+  function getStudentData(code, phone) {
+    return callBackend('getStudentData', {
+      code: code,
+      phone: phone
+    });
   }
 
   function submitQuiz(data) {
